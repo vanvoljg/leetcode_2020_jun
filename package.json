@@ -1,0 +1,13 @@
+{
+  "author": "Jesse Van Volkinburg <jesse@codeslip.net>",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^7.1.0",
+    "prettier": "2.0.5",
+    "prettier-eslint": "^10.1.1"
+  },
+  "dependencies": {},
+  "prettier": {
+    "singleQuote": true
+  }
+}
