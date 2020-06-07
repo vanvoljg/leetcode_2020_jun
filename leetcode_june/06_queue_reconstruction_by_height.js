@@ -2,6 +2,23 @@
  * @param {number[][]} people
  * @return {number[][]}
  */
+
+const reconstructQueue = function (people) {
+  people.sort((a, b) => {
+    if (a[0] == b[0]) {
+      return a[1] - b[1];
+    }
+    return b[0] - a[0];
+  });
+
+  let reconstructed = [];
+  people.forEach((ele) => {
+    reconstructed.splice(ele[1], 0, ele);
+  });
+  return reconstructed;
+};
+
+/*
 const reconstructQueue = function (people) {
   const shortest = findShortest(people);
   const startIdx = 0;
@@ -57,6 +74,7 @@ function queueMergeSortMerge(leftQueue, rightQueue) {
     }
   }
 }
+*/
 
 /* When sorting:
  *   Sort by priority and height simultaneously?
@@ -86,7 +104,15 @@ function run() {
     [5, 0], // 5 * 0 = 0; 5 + 0 = 5
     [6, 1], // 6 * 1 = 6; 6 + 1 = 7
     [5, 2], // 5 * 2 = 10; 5 + 2 = 7
-    [4, 5],
+  ];
+
+  const input2 = [
+    [7, 3],
+    [8, 7],
+    [6, 4],
+    [4, 3],
+    [3, 1],
+    [9, 8],
   ];
 
   const output1 = [
@@ -98,15 +124,19 @@ function run() {
     [7, 1],
   ];
 
-  console.log(findShortest(input1));
+  console.log(reconstructQueue(input1));
+  console.log(reconstructQueue(input2));
 }
 
-// HERE IT IS! (hopefully)
-// [5, 0], [5, 2] <-> [7, 0], [4, 4] -> [5, 0], [7, 0], [5, 2], [4, 4]
-// if height is less or equal, lower priority number first -- but this doesn't work
-// like when comparing [7,1] and [4,4], 4 is less than 7, but goes after 7
-// So...take the shortest person: they are 4 tall and have 4 people in front of them
-// who are taller or equal in height. Anyone equal in height will need to have a
-// lower priority number in front of them.
+/**
+ * HERE IT IS! (hopefully)
+ * [5, 0], [5, 2] <-> [7, 0], [4, 4] -> [5, 0], [7, 0], [5, 2], [4, 4]
+ * if height is less or equal, lower priority number first -- but this doesn't work
+ * like when comparing [7,1] and [4,4], 4 is less than 7, but goes after 7
+ * So...take the shortest person: they are 4 tall and have 4 people in front of them
+ * who are taller or equal in height. Anyone equal in height will need to have a
+ * lower priority number in front of them.
+ * Yyyyeah, nope...
+ */
 
 run();
