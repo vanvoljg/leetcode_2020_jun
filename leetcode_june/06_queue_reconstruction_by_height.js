@@ -18,6 +18,32 @@ const reconstructQueue = function (people) {
   return reconstructed;
 };
 
+/* Explanation:
+ * Problem description: given a randomly-sorted input list of "people" of the form
+ * [height, num_taller], sort the elements by the following method: for each
+ * person, the second index is the maximum number of people who are equal or taller
+ * in height, and so within a height bracket, the people must be sorted according
+ * to the second number.
+ * What this means in practice is a sort of dual-priority queue, where a given
+ * person doesn't need to care about anybody who is "shorter".
+ *  - First, sort by height, tallest first, then within each height, sort by the
+ *    number of people "in front" (second index). This is the MAXIMUM number of
+ *    people in front of a given person!
+ *  - Second, take the now-sorted input array and sequentially insert each one into
+ *    the output array using the second number as the index for insertion.
+ *    - We start with the tallest people because they have the least restriction
+ *      on their position. They only need to care about people equal to their own
+ *      height, and so their positions are the least fixed.
+ *    - The next tallest group must take into account all people already placed
+ *      in the output list. `num_taller` indicates the number of people already
+ *      placed that the current person must skip. If there are 2 people "equal or
+ *      taller", then index 2 in the output list ([7,0],[6,1],INDEX 2,) will have
+ *    2 people who are equal or taller "before" them in the list.
+ *    - Continue until complete. Because insertion at an index must shift all
+ *      elements after it, insertion is assumed to be O(n), where n is the length
+ *      of the array. We assume insertions will happen at the head of the list, in
+ *      the worst case.
+
 /*
 const reconstructQueue = function (people) {
   const shortest = findShortest(people);
