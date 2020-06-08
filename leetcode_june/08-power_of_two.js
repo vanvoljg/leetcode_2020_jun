@@ -18,6 +18,11 @@ const isPowerOfTwo = function (n) {
   if (n == 2 || n == 1) return true;
 };
 
+const isPowerOfTwoTricky = function (n) {
+  if (n <= 0) return false;
+  return !(n & (n - 1));
+};
+
 const run = function () {
   let t1 = 1;
   let t2 = 16;
