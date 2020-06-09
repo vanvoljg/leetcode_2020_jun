@@ -4,18 +4,14 @@
  * @return {boolean}
  */
 var isSubsequence = function (s, t) {
-  const tEnd = t.length;
-  const sEnd = s.length;
+  if (s.length == 0) return true; // Empty substring always matches
+  if (s.length > t.length) return false; // s longer than t cannot ever match
   let j = 0;
 
-  // This loop will not check end condition if end of t was reached
-  for (let i = 0; i < tEnd; i++) {
-    if (j >= sEnd) return true;
-    if (t[i] == s[j]) {
-      j++;
-    }
+  for (let i = 0; i < t.length; i++) {
+    if (t[i] == s[j]) j++;
+    if (j >= s.length) return true;
   }
-  
-  // Performs the missing end condition check from above loop
-  return j >= sEnd;
+
+  return false;
 };
