@@ -3,6 +3,17 @@
  * @param {number} target
  * @return {number}
  */
-var searchInsert = function(nums, target) {
-    
+const searchInsert = (nums, target) => {
+  if (nums.length == 0) return 0;
+  let l = 0;
+  let r = nums.length - 1;
+  let mid;
+  while (l <= r) {
+    mid = l + ((r - l) >> 1); // Integer division by 2
+    if (nums[mid] == target) return mid;
+    if (nums[mid] > target) r = mid;
+    else l = mid;
+  }
+
+  return mid;
 };
