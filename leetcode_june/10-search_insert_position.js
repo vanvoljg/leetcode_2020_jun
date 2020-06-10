@@ -11,9 +11,9 @@ const searchInsert = (nums, target) => {
   while (l <= r) {
     mid = l + ((r - l) >> 1); // Integer division by 2
     if (nums[mid] == target) return mid;
-    if (nums[mid] > target) r = mid;
-    else l = mid;
+    if (nums[mid] > target) r = mid - 1;
+    else l = mid + 1;
   }
 
-  return mid;
+  return nums[mid] < target ? mid + 1 : mid;
 };
