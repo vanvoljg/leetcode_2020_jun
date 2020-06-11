@@ -8,6 +8,21 @@ const sortColors = (nums) => {
   let idxB = nums.length;
   let i = 0;
 
+  while (i < idxB) {
+    if (nums[i] == 0) {
+      if (i != idxR) arraySwap(nums, i, idxR);
+      idxR++;
+      i++;
+    } else if (nums[i] == 2) {
+      arraySwap(nums, i, idxB - 1);
+      idxB--;
+    } else if (nums[i] ==1 ) {
+      i++;
+    } else {
+      console.log('Found invalid array element');
+    }
+  }
+  return;
 };
 
 const arraySwap = (arr, l, r) => {
