@@ -5,30 +5,33 @@
 const largestDivisibleSubset = (nums) => {
   if (nums.length <= 1) return nums;
 
-  let ret = [nums[0]];
-  for (let i = 1; i < nums.length; i++) {
-    const retLen = ret.length;
-    for (j = 0; j < retLen; j++) {
-      if (nums[i] % ret[j] != 0 && ret[j] % nums[i] != 0) {
-        ret.splice(j, 1);
-      } else {
-        if (ret[ret.length - 1] != nums[i]) {
-          ret.push(nums[i]);
-        }
+  nums.sort((a, b) => a - b);
+
+  let table = new Array(nums.length);
+  for (let i = 0; i < table.length; i++) {
+    table[i] = 1;
+  }
+
+  for (let i = 0; i < nums.length; i++) {
+    for (let j = 0; j < nums.length; j++) {
+      if (nums[i] % nums[j] == 0 || nums[j] % nums[i]) {
+        table[i] = table[j] + 1
       }
     }
   }
 
-  return ret;
+  console.log({table});
+  return table;
 };
 
 const run = () => {
   let in0 = [1, 2, 3];
   let in1 = [1, 2, 4, 8];
   let in2 = [];
-  let in3 = [5, 2, 10, 15, 4, 8, 32, 44];
+  let in3 = [5, 4, 2, 15, 10, 6, 12, 32, 44, 8];
+  let in4 = [5, 2, 4, 3, 1];
 
-  console.log({
+  ({
     in0,
     out0: largestDivisibleSubset(in0),
     in1,
@@ -37,6 +40,8 @@ const run = () => {
     out2: largestDivisibleSubset(in2),
     in3,
     out3: largestDivisibleSubset(in3),
+    in4,
+    out4: largestDivisibleSubset(in4),
   });
 };
 
