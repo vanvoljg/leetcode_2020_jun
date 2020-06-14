@@ -18,24 +18,23 @@ const largestDivisibleSubset = (nums) => {
   }
 
   let max = dp.reduce(
-    (acc, el, i) => {
+    (acc, num, i) => {
       if (el > acc.max) {
-        return { max: el, i };
+        return { num, i };
       } else {
-        return { max: acc.max, i: acc.i };
+        return acc;
       }
     },
     {
-      max: Number.MIN_SAFE_INTEGER,
+      num: Number.MIN_SAFE_INTEGER,
       i: 0,
     }
   );
 
   let ret = [];
-
   let j = 1;
   for (let i = 0; i <= max.i; i++) {
-    if ((dp[i] == j) && (nums[max.i] % nums[i] == 0)) {
+    if (dp[i] == j && nums[max.i] % nums[i] == 0) {
       ret.push(nums[i]);
       j++;
     }
