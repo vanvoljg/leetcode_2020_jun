@@ -85,8 +85,18 @@ const treeBuilder = (array) => {
   return tree;
 };
 
-const run = () => {
+const testRunner = (tc) => {
+  const tree = treeBuilder(tc[0]);
+  const val = tc[1];
+  return searchBST(tree, val);
+};
 
+const run = () => {
+  let tests = [[[4,2,7,1,3],2], [[2,1,3],5]];
+
+  for (const test of tests) {
+    console.log({test, result: testRunner(test)})
+  }
 };
 
 run();
