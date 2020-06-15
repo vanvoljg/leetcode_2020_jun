@@ -8,72 +8,32 @@
  * @return {number}
  */
 const findCheapestPrice = (n, flights, src, dst, k) => {
+  if (src == dst) return 0;
   if (flights.length == 0) return -1;
 
-  // Build adjacency list
-  let adjList = {};
-  for (const [from, to, price] of flights) {
-    if (!adjList[from]) {
-      adjList[from] = [];
+  let dp = new Array(k+2); // k + 2 because ... it needs to be?
+  for (let i = 0; i < dp.length; i++) {
+    dp[i] = new Array(n); // size n because ... yes?
+    for (let j = 0; j < n; j++) {
+      dp[i][j] = Number.MAX_SAFE_INTEGER;
     }
-    adjList[from].push([to, price]);
+  };
+
+  // dp[i][j] is the distance from src to j, following at most i edges
+  for (let i = 0; i < dp.length; i++) {
+    dp[i][src] = 0;
   }
 
-  let costs = [];
-
-  dfs(src, dst, adjList, costs, k);
-
-  if (costs.length == 0) return -1;
-
-  return costs.reduce(
-    (min, cost) => Math.min(min, cost),
-    Number.MAX_SAFE_INTEGER
-  );
-};
-
-const dfs = (src, dst, adjList, costs, k) => {
-  console.log({src,dst});
-  let costSoFar = 0;
-  let depth = 0;
-  if (!adjList[src]) return;
-  for (const edge of adjList[src]) {
-    let visited = new Set();
-    const cost = _dfs(
-      edge[0],
-      dst,
-      visited,
-      adjList,
-      depth + 1,
-      k,
-      costSoFar + edge[1]
-    );
-    if (cost != -1) {
-      costs.push(cost);
-    }
-  }
-};
-
-const _dfs = (cur, dst, visited, adjList, depth, k, costSoFar) => {
-  console.log({cur,dst});
-  if (depth > k && cur != dst) return -1;
-  if (cur == dst) return costSoFar;
-  if (!visited.has(cur)) {
-    visited.add(cur);
-    if (adjList[cur]) {
-      for (const edge of adjList[cur]) {
-        return _dfs(
-          edge[0],
-          dst,
-          visited,
-          adjList,
-          depth + 1,
-          k,
-          costSoFar + edge[1]
-        );
+  for (let i = 1; i < dp.length; i++) {
+    for (const [from, to, cost] of flights) {
+      if (dp[i-1][from] != Number.MAX_SAFE_INTEGER) {
+        dp[i][to] = Math.min(dp[i][to], dp[i - 1][from] + cost);
       }
     }
   }
-  return costSoFar;
+
+  if (dp[k+1][dst] == Number.MAX_SAFE_INTEGER) return -1;
+  return dp[k+1][dst];
 };
 
 const run = () => {
@@ -100,12 +60,13 @@ const run = () => {
     k: 0,
   };
   let ex3 = {
-    n: 4,
+    n: 5,
     flights: [
       [0, 1, 100],
       [1, 2, 100],
       [2, 3, 200],
       [3, 4, 100],
+      [0, 3, 200],
     ],
     src: 1,
     dst: 4,
@@ -170,12 +131,12 @@ const run = () => {
     k: 1,
   };
   console.log({
-    // ex1: findCheapestPrice(ex1.n, ex1.flights, ex1.src, ex1.dst, ex1.k),
-    // ex2: findCheapestPrice(ex2.n, ex2.flights, ex2.src, ex2.dst, ex2.k),
-    // ex3: findCheapestPrice(ex3.n, ex3.flights, ex3.src, ex3.dst, ex3.k),
-    // ex4: findCheapestPrice(ex4.n, ex4.flights, ex4.src, ex4.dst, ex4.k),
-    // ex5: findCheapestPrice(ex5.n, ex5.flights, ex5.src, ex5.dst, ex5.k),
-    // ex6: findCheapestPrice(ex6.n, ex6.flights, ex6.src, ex6.dst, ex6.k),
+    ex1: findCheapestPrice(ex1.n, ex1.flights, ex1.src, ex1.dst, ex1.k),
+    ex2: findCheapestPrice(ex2.n, ex2.flights, ex2.src, ex2.dst, ex2.k),
+    ex3: findCheapestPrice(ex3.n, ex3.flights, ex3.src, ex3.dst, ex3.k),
+    ex4: findCheapestPrice(ex4.n, ex4.flights, ex4.src, ex4.dst, ex4.k),
+    ex5: findCheapestPrice(ex5.n, ex5.flights, ex5.src, ex5.dst, ex5.k),
+    ex6: findCheapestPrice(ex6.n, ex6.flights, ex6.src, ex6.dst, ex6.k),
     ex7: findCheapestPrice(ex7.n, ex7.flights, ex7.src, ex7.dst, ex7.k),
   });
 };
