@@ -12,7 +12,16 @@
  * @return {TreeNode}
  */
 const searchBST = (root, val) => {
+  let stack = [root];
+  while (stack.length > 0) {
+    const cur = stack.pop();
+    if (!cur) break;
+    if (cur.val == val) return cur;
+    if (val < cur.val) stack.push(cur.left);
+    if (val > cur.val) stack.push(cur.right);
+  }
 
+  return null;
 };
 
 function TreeNode(val, left, right) {
@@ -27,13 +36,13 @@ function QueueNode(val, next) {
 }
 
 function Queue(val) {
-  this.tail = new QueueNode(val) || null;
+  this.tail = val ? new QueueNode(val) : null;
   this.head = this.tail;
   this.length = this.head ? 1 : 0;
 }
 
 Queue.prototype.peek = function () {
-  return this.head ? this.head.value : null;
+  return this.head ? this.head.val : null;
 }
 
 Queue.prototype.enqueue = function (val) {
@@ -63,7 +72,7 @@ const addTreeNode = (root, val) => {
   }
   let q = new Queue(root);
   while (q.peek()) {
-    const cur = queue.dequeue();
+    const cur = q.dequeue();
     if (!cur.left) {
       cur.left = new TreeNode(val);
       return;
@@ -78,9 +87,9 @@ const addTreeNode = (root, val) => {
 }
 
 const treeBuilder = (array) => {
-  let tree;
-  for (const val of array) {
-    addTreeNode(tree, val);
+  let tree = new TreeNode(array[0]);
+  for (let i = 1; i < array.length; i++) {
+    addTreeNode(tree, array[i]);
   }
   return tree;
 };
@@ -95,7 +104,7 @@ const run = () => {
   let tests = [[[4,2,7,1,3],2], [[2,1,3],5]];
 
   for (const test of tests) {
-    console.log({test, result: testRunner(test)})
+    console.log('109',{test, result: testRunner(test)},)
   }
 };
 
