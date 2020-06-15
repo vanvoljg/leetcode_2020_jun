@@ -14,3 +14,79 @@
 const searchBST = (root, val) => {
 
 };
+
+function TreeNode(val, left, right) {
+  this.val = val || null;
+  this.left = left || null;
+  this.right = right || null;
+}
+
+function QueueNode(val, next) {
+  this.val = val || null;
+  this.next = next || null;
+}
+
+function Queue(val) {
+  this.tail = new QueueNode(val) || null;
+  this.head = this.tail;
+  this.length = this.head ? 1 : 0;
+}
+
+Queue.prototype.peek = function () {
+  return this.head ? this.head.value : null;
+}
+
+Queue.prototype.enqueue = function (val) {
+  const newNode = new QueueNode(val);
+  if (!this.head) {
+    this.head = newNode;
+    this.tail = this.head;
+  } else {
+    this.tail.next = newNode;
+  }
+  this.length++;
+  return this.length;
+}
+
+Queue.prototype.dequeue = function () {
+  if (!this.head) return null;
+  const val = this.head.val;
+  this.head = this.head.next;
+  this.length--;
+  return val;
+}
+
+const addTreeNode = (root, val) => {
+  if (!root) {
+    root = new TreeNode(val);
+    return;
+  }
+  let q = new Queue(root);
+  while (q.peek()) {
+    const cur = queue.dequeue();
+    if (!cur.left) {
+      cur.left = new TreeNode(val);
+      return;
+    }
+    if (!cur.right) {
+      cur.right = new TreeNode(val);
+      return;
+    }
+    cur.left && q.enqueue(cur.left);
+    cur.right && q.enqueue(cur.right);
+  }
+}
+
+const treeBuilder = (array) => {
+  let tree;
+  for (const val of array) {
+    addTreeNode(tree, val);
+  }
+  return tree;
+};
+
+const run = () => {
+
+};
+
+run();
