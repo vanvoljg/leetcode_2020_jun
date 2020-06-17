@@ -4,58 +4,82 @@
  */
 const solve = (board) => {
   if (board.length < 3) return;
-  for (let i = 1; i < board.length - 1; i++) {
-    for (let j = 1; j < board[i].length - 1; j++) {
-      if (board[i][j] == 'X') continue;
-      if (capturable(board, i, j, board.length, board[i].length)) {
-        board[i][j] = 'X';
-      }
+
+  // check edges & mark edge-linked 'O' as uncapturable, 2 or similar
+  // everything which has not been marked uncapturable becomes captured, 'X'
+  checkEdges(board);
+  markCaptured(board);
+};
+
+const checkEdges = (board) => {
+  let row = 0;
+  let col;
+
+  // Top edge
+  for (col = 0; col < board[row].length; col++) {
+    if (board[row][col] == 'O') {
+      nonCaptureRegion(board, row, col);
+    }
+  }
+
+  // Right edge
+  col = board[0].length - 1;
+  for (row = 1; row < board.length; row++) {
+    if (board[row][col] == 'O') {
+      nonCaptureRegion(board, row, col);
+    }
+  }
+
+  // Bottom edge
+  row = board.length - 1;
+  for (col = 0; col < board[row].length - 1; col++) {
+    if (board[row][col] == 'O') {
+      nonCaptureRegion(board, row, col);
+    }
+  }
+
+  // Left edge
+  col = 0;
+  for (row = 1; row < board.length - 1; row++) {
+    if (board[row][col] == 'O') {
+      nonCaptureRegion(board, row, col);
     }
   }
 };
 
-const capturable = (board, row, col, height, width) => {
-  let rowL = false;
-  let rowR = false;
-  let colT = false;
-  let colB = false;
-  // Check row validity left side
-  let i = col - 1;
-  while (i >= 0) {
-    if (board[row][i] == 'X') {
-      rowL = true;
-      break;
+const nonCaptureRegion = (board, row, col) => {
+  let stack = [];
+  stack.push([row, col]);
+  while (stack.length > 0) {
+    let cur = stack.pop();
+    const cRow = cur[0];
+    const cCol = cur[1];
+    board[cRow][cCol] = 'N';
+
+    if (cCol > 0 && board[cRow][cCol - 1] == 'O') {
+      stack.push([cRow, cCol - 1]);
     }
-    i--;
-  }
-  // Check row validity right side
-  i = col + 1;
-  while (i <= width - 1) {
-    if (board[row][i] == 'X') {
-      rowR = true;
-      break;
+    if (cCol < board[cRow].length - 1 && board[cRow][cCol + 1] == 'O') {
+      stack.push([cRow, cCol + 1]);
     }
-    i++;
-  }
-  // Check col validity above / top
-  i = row - 1;
-  while (i >= 0) {
-    if (board[i][col] == 'X') {
-      colT = true;
-      break;
+    if (cRow > 0 && board[cRow - 1][cCol] == 'O') {
+      stack.push([cRow - 1, cCol]);
     }
-    i--;
-  }
-  // Check col validity below / bottom
-  i = row + 1;
-  while (i <= height - 1) {
-    if (board[i][col] == 'X') {
-      colB = true;
-      break;
+    if (cRow < board.length - 1 && board[cRow + 1][cCol] == 'O') {
+      stack.push([cRow + 1, cCol]);
     }
-    i++;
   }
-  return rowL && rowR && colT && colB;
+};
+
+const markCaptured = (board) => {
+  const h = board.length;
+  for (let i = 0; i < h; i++) {
+    const w = board[0].length;
+    for (let j = 0; j < w; j++) {
+      if (board[i][j] != 'N') board[i][j] = 'X';
+      if (board[i][j] == 'N') board[i][j] = 'O';
+    }
+  }
 };
 
 const testRunner = (testArr) => {
@@ -69,7 +93,7 @@ const testRunner = (testArr) => {
     for (let i = 0; i < inBoard.length; i++) {
       for (let j = 0; j < inBoard[i].length; j++) {
         if (inBoard[i][j] !== outBoard[i][j]) {
-          console.log("FAILING BOARD:", inBoard);
+          console.log('FAILING BOARD:', inBoard);
           pass = false;
         }
       }
@@ -84,48 +108,48 @@ const testRunner = (testArr) => {
 
 const test = () => {
   let boards = [
-    // [
-    // [
-    // ['X', 'X', 'X', 'X'],
-    // ['X', 'O', 'O', 'X'],
-    // ['X', 'X', 'O', 'X'],
-    // ['X', 'O', 'X', 'X'],
-    // ],
-    // [
-    // ['X', 'X', 'X', 'X'],
-    // ['X', 'X', 'X', 'X'],
-    // ['X', 'X', 'X', 'X'],
-    // ['X', 'O', 'X', 'X'],
-    // ],
-    // ],
-    // [
-    // [
-    // ['X', 'X', 'X', 'X', 'X'],
-    // ['X', 'O', 'O', 'X', 'X'],
-    // ['X', 'X', 'O', 'X', 'X'],
-    // ['X', 'O', 'X', 'X', 'X'],
-    // ['X', 'X', 'O', 'X', 'O'],
-    // ],
-    // [
-    // ['X', 'X', 'X', 'X', 'X'],
-    // ['X', 'X', 'X', 'X', 'X'],
-    // ['X', 'X', 'X', 'X', 'X'],
-    // ['X', 'X', 'X', 'X', 'X'],
-    // ['X', 'X', 'O', 'X', 'O'],
-    // ],
-    // ],
-    // [
-    // [
-    // ['O', 'O', 'O'],
-    // ['O', 'O', 'O'],
-    // ['O', 'O', 'O'],
-    // ],
-    // [
-    // ['O', 'O', 'O'],
-    // ['O', 'O', 'O'],
-    // ['O', 'O', 'O'],
-    // ],
-    // ],
+    [
+      [
+        ['X', 'X', 'X', 'X'],
+        ['X', 'O', 'O', 'X'],
+        ['X', 'X', 'O', 'X'],
+        ['X', 'O', 'X', 'X'],
+      ],
+      [
+        ['X', 'X', 'X', 'X'],
+        ['X', 'X', 'X', 'X'],
+        ['X', 'X', 'X', 'X'],
+        ['X', 'O', 'X', 'X'],
+      ],
+    ],
+    [
+      [
+        ['X', 'X', 'X', 'X', 'X'],
+        ['X', 'O', 'O', 'X', 'X'],
+        ['X', 'X', 'O', 'X', 'X'],
+        ['X', 'O', 'X', 'X', 'X'],
+        ['X', 'X', 'O', 'X', 'O'],
+      ],
+      [
+        ['X', 'X', 'X', 'X', 'X'],
+        ['X', 'X', 'X', 'X', 'X'],
+        ['X', 'X', 'X', 'X', 'X'],
+        ['X', 'X', 'X', 'X', 'X'],
+        ['X', 'X', 'O', 'X', 'O'],
+      ],
+    ],
+    [
+      [
+        ['O', 'O', 'O'],
+        ['O', 'O', 'O'],
+        ['O', 'O', 'O'],
+      ],
+      [
+        ['O', 'O', 'O'],
+        ['O', 'O', 'O'],
+        ['O', 'O', 'O'],
+      ],
+    ],
     [
       [
         ['O', 'X', 'X', 'O', 'X'],
