@@ -3,7 +3,7 @@
  * @return {number}
  */
 const hIndex = (citations) => {
-  // Because it's easier to search from the largest number, go in reverse order
+  if (citations.length === 0) return 0;
   let l = 0;
   let r = citations.length - 1;
   let mid = 0;
@@ -42,6 +42,9 @@ const test = () => {
     [[0,0,3,4,7,9,10,11,11,18,20,22],7],
     [[0,0,3,4,7,7,7,8,8,9,9,9,10,11,11,18,20,22],9],
     [[0,0,3,4,7,7,7,8,8,8,8,8,8,8,8,9,9,9,10,11,11,18,20,22],9],
+    [[],0],
+    [[1],1],
+    [[0],0],
   ];
 
   testRunner(citations);
