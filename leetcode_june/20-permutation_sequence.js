@@ -4,30 +4,27 @@
  * @return {string}
  */
 const getPermutation = (n, k) => {
-  let arr = permutations(n);
-  arr.sort();
-  return arr[k - 1].join('');
-};
-
-const permutations = (n) => {
-  if (n === 1) return [[1]];
-  let arr = permutations(n - 1);
+  let numbers = [];
+  let factorial = [1]; // 0! = 1
   let ret = [];
-  let i = 0;
-  let j = 0;
-  let limit = arr.length * n;
-  while (j < limit) {
-    // console.log({ i, j, n });
-    let cur;
-    cur = [...arr[i]];
-    // console.log(cur);
-    cur.splice(n - (j % n) - 1, 0, n);
-    ret[j] = cur;
-    j++;
-    if (j % n === 0) i++;
+
+  // Precompute factorial and usable digits
+  for (let i = 1; i <= n; i++) {
+    factorial[i] = factorial[i - 1] * i;
+    numbers.push(i);
   }
 
-  return ret;
+  // k is given as 1-based index, but we use 0-based
+  k--;
+
+  for (let i = 1; i <= n; i++) {
+    let idx = Math.floor(k / factorial[n - i]);
+    ret.push(numbers[idx]);
+    numbers.splice(idx, 1);
+    k -= idx * factorial[n - i];
+  }
+
+  return ret.join('');
 };
 
 const testRunner = (tests, func) => {
