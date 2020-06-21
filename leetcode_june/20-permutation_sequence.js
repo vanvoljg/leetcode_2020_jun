@@ -6,7 +6,6 @@
 const getPermutation = (n, k) => {
   let arr = permutations(n);
   arr.sort();
-  console.log(arr);
   return arr[k - 1].join('');
 };
 
@@ -20,19 +19,10 @@ const permutations = (n) => {
   while (j < limit) {
     // console.log({ i, j, n });
     let cur;
-    if (i < n) {
-      cur = [...arr[i]];
-      // console.log(cur);
-      cur.splice(n - (j % n) - 1, 0, n);
-      ret[j] = cur;
-    } else {
-      for (let el of arr) {
-      cur = [...arr[i]];
-        cur.splice(0,0,n);
-        ret[j] = cur;
-        j++;
-      }
-    }
+    cur = [...arr[i]];
+    // console.log(cur);
+    cur.splice(n - (j % n) - 1, 0, n);
+    ret[j] = cur;
     j++;
     if (j % n === 0) i++;
   }
@@ -60,7 +50,7 @@ const test = () => {
     [[2, 1], '12'],
     [[2, 2], '21'],
     [[3, 3], '213'],
-    [[4,9],'2314'],
+    [[4, 9], '2314'],
     // [[4,17],'3412'],
   ];
 
