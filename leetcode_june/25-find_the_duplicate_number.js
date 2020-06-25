@@ -5,7 +5,19 @@
  * @return {number}
  */
 function findDuplicate(nums) {
-  return 0;
+  // Will never access out of range: max value <= max index because # ele >= max value + 1
+  let i = 0;
+  let j = nums[nums[0]];
+  while (nums[i] != [j]) {
+    i = nums[i];
+    j = nums[nums[j]];
+  };
+  i = 0;
+  while (nums[i] != nums[j]) {
+    i = nums[i];
+    j = nums[j];
+  }
+  return nums[i];
 }
 
 function testRunner(tests, func) {
@@ -15,8 +27,8 @@ function testRunner(tests, func) {
     console.log({
       name,
       input,
-      expected,
       result,
+      expected,
       pass: result === expected,
     });
   }
@@ -29,6 +41,7 @@ const test = () => {
     [[3, 1, 4, 2, 5, 2], 2],
     [[1, 3, 4, 2, 2], 2],
     [[3, 1, 3, 4, 2], 3],
+    [[6, 2, 4, 1, 3, 2, 5, 2], 2],
   ];
 
   testRunner(tests, findDuplicate);
