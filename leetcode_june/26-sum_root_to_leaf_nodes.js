@@ -1,6 +1,6 @@
 'use strict';
 
-import {Tree} from './lib/tree.js';
+import { Tree } from './lib/tree.js';
 
 /**
  * Definition for a binary tree node.
@@ -16,7 +16,17 @@ import {Tree} from './lib/tree.js';
  */
 function sumNumbers(root) {
   if (!root) return 0;
-};
+  return dfs(root, 0);
+}
+
+function dfs(root, cur) {
+  if (!root) return 0;
+  cur = cur * 10 + root.val;
+  if (root.left == null && root.right == null) return cur;
+  let left = dfs(root.left, cur);
+  let right = dfs(root.right, cur);
+  return left + right;
+}
 
 function testRunner(tests, func) {
   const name = func.name;
@@ -37,8 +47,9 @@ const test = () => {
   const tests = [
     [[], 0],
     [[1], 1],
-    // [[1,2,3], 25],
-    // [[4,9,0,5,1], 1026],
+    [[1, 2], 12],
+    [[1, 2, 3], 25],
+    [[4, 9, 0, 5, 1], 1026],
   ];
 
   testRunner(tests, sumNumbers);
