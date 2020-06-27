@@ -48,7 +48,7 @@ export class Tree {
     let ret = [];
     while (q.peek()) {
       const cur = q.shift();
-      cur.val && ret.push(cur.val);
+      ret.push(cur.val);
       cur.left && q.push(cur.left);
       cur.right && q.push(cur.right);
     }
