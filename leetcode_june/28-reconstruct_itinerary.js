@@ -5,43 +5,36 @@
  * @return {string[]}
  */
 const findItinerary = (tickets) => {
-  let map = new Map();
-  for (const [from, to] of tickets) {
-    map.has(from) || map.set(from, []);
-    let arr = map.get(from);
-    arr.push(to);
-    map.set(from, arr);
+  let route = [];
+  let adjList = new Map();
+  for (let [from, to] of tickets) {
+    adjList.has(from) || adjList.set(from, []);
+    let temp = adjList.get(from);
+    temp.push(to);
+    adjList.set(from, temp);
   }
-  for (let [from, toArr] of map) {
-    toArr.sort((a, b) => (a < b ? 1 : -1));
-    map.set(from, toArr);
+  for (let [from, toArr] of adjList) {
+    adjList.set(from, revSortStrings(toArr));
   }
-  for (let [from, toArr] of map) {
-    if (toArr.length > 1) {
-      let tmp = [];
-      for (let i = toArr.length - 1; i >= 0; i--) {
-        if (!map.has(toArr[i])) {
-          tmp.unshift(toArr.splice(i, 1)[0]);
-        }
-      }
-      toArr = [...tmp, ...toArr];
-      map.set(from, toArr);
-    }
-  }
-
-  let ret = new Array();
-  let cur = 'JFK';
-  let toArr;
-  let next;
-  while (cur) {
-    ret.push(cur);
-    toArr = map.get(cur) || [];
-    next = toArr.pop();
-    map.set(cur, toArr);
-    cur = next;
-  }
-  return ret;
+  dfs(adjList, 'JFK', route);
+  return route.reverse();
 };
+
+const dfs = (adjList, dest, route) => {
+  while (adjList.has(dest)) {
+    let toList = adjList.get(dest);
+    let next = toList.pop();
+    if (toList.length === 0) {
+      adjList.delete(dest);
+    } else {
+      adjList.set(dest, toList);
+    }
+    dfs(adjList, next, route);
+  }
+  route.push(dest);
+};
+
+const revSortStrings = (array) => array.sort((a, b) => (a < b ? 1 : -1));
 
 const testRunner = (tests, func) => {
   const name = func.name;
@@ -59,7 +52,7 @@ const testRunner = (tests, func) => {
 
 const arrtest = (result, expected) => {
   for (let i = 0; i < expected.length; i++) {
-    if (result[i] != expected[i]) return false;
+    if (result[i] !== expected[i]) return false;
   }
   return true;
 };
