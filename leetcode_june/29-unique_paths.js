@@ -6,18 +6,15 @@
  * @return {number}
  */
 const uniquePaths = function (m, n) {
-  let dp = new Array(n).fill(1); // dp[i] = number of possible moves to reach finish
-  for (let i = 0; i < n; i++) {
-    dp[i] = new Array(m).fill(1);
-  }
+  let dp = new Array(m).fill(1);
 
   for (let i = 1; i < n; i++) {
-    for (let j = 1; j < m; j++) {
-      dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+    for (let j = m - 2; j >= 0; j--) {
+      dp[j] = dp[j + 1] + dp[j]
     }
   }
 
-  return dp[n - 1][m - 1];
+  return dp[0];
 };
 
 const testRunner = (tests, func) => {
@@ -40,7 +37,6 @@ const test = () => {
     [[3, 2], 3],
     [[1, 1], 1],
     [[10, 10], 48620],
-    [[50, 50], 50],
   ];
 
   testRunner(tests, uniquePaths);
