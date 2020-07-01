@@ -2,22 +2,18 @@
 
 export class Trie {
   constructor() {
-    this.children = new Array(26);
+    this.children = {};
     this.terminal = false;
   }
-
-  static a = 'a'.charCodeAt(0);
 
   insert(word) {
     let node = this;
     let char = '';
-    let key = 0;
     for (char of word) {
-      key = char.charCodeAt(0) - Trie.a;
-      if (!node.children[key]) {
-        node.children[key] = new Trie();
+      if (!node.children[char]) {
+        node.children[char] = new Trie();
       }
-      node = node.children[key];
+      node = node.children[char];
     }
     node.terminal = true;
   }
@@ -25,11 +21,9 @@ export class Trie {
   search(word) {
     let node = this;
     let char = '';
-    let key = 0;
     for (char of word) {
-      key = char.charCodeAt(0) - Trie.a;
-      if (!node.children[key]) return false;
-      node = node.children[key];
+      if (!node.children[char]) return false;
+      node = node.children[char];
     }
     return node.terminal;
   }
@@ -37,11 +31,9 @@ export class Trie {
   startsWith(word) {
     let node = this;
     let char = '';
-    let key = 0;
     for (char of word) {
-      key = char.charCodeAt(0) - Trie.a;
-      if (!node.children[key]) return false;
-      node = node.children[key];
+      if (!node.children[char]) return false;
+      node = node.children[char];
     }
     return true;
   }
