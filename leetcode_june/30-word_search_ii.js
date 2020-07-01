@@ -8,14 +8,31 @@ import { Trie } from './lib/trie.js';
  * @return {string[]}
  */
 const findWords = (board, words) => {
+  let m = board.length;
+  let n = board[0].length;
+  if (!m || !n) return [];
+
   let trie = new Trie();
-  return [''];
+  for (let word of words) trie.insert(word);
+
+  let ret = [];
+
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      dfs(board, i, j, trie, ret);
+    }
+  }
+  return ret;
+};
+
+const dfs = (board, i, j, trie, ret) => {
+  console.log(trie.startsWith(board[i][j]));
 };
 
 const testRunner = (tests, func) => {
   const name = func.name;
   for (let { input, expected } of tests) {
-    const result = func(input);
+    const result = func(...input);
     console.log({
       name,
       input,
